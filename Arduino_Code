@@ -1,0 +1,38 @@
+#include <Servo.h>
+Servo myServo;
+
+int echoPin = 3;
+int trigPin = 4;
+int servPin = 5;
+
+int standby = 0;
+int active = 100;
+int jarak = 10.0;
+
+void setup() {
+  Serial.begin(9600);
+  myServo.attach(servPin);
+  myServo.write(standby);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  digitalWrite(echoPin, LOW);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  unsigned long duration = pulseIn(echoPin, HIGH);
+  float distance = duration/29.0/2.0;
+  Serial.println(distance);
+
+  if(distance<=jarak){
+    myServo.write(active);
+    delay(500);
+    myServo.write(standby);
+    delay(1000);
+  }
+}
